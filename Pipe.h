@@ -18,5 +18,7 @@ public:
 	int getArrayCounter();
 	void incrementAC();
 	void resetAC();
+	sf::Sprite* getTopSprite();
+	sf::Sprite* getBotSprite();
 	
 };

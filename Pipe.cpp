@@ -3,6 +3,7 @@
 //spreadsheet is 512x512
 #define GAMEWIDTH 700
 #define GAMEHEIGHT 900
+using namespace std;
 Pipe::Pipe(int topX, int topY, int botX, int botY){
 	topSprite = new sf::Sprite();
 	botSprite = new sf::Sprite();
@@ -48,6 +49,14 @@ void Pipe::movePipes(char sNumber){
 	}
 }
 
+sf::Sprite* Pipe::getTopSprite(){
+	return this->topSprite;
+}
+
+sf::Sprite* Pipe::getBotSprite(){
+	return this->botSprite;
+}
+
 void Pipe::setPipePosition(char sNumber){
 	if (sNumber == '0'){
 		this->topSprite->setPosition(this->topSprite->getPosition().x, -150 - 450);
@@ -90,6 +99,8 @@ void Pipe::setPipePosition(char sNumber){
 		this->botSprite->setPosition(this->botSprite->getPosition().x, 675);
 	}
 	this->incrementAC();
+	cout << "array counter is" <<  arrayCounter << endl;
+
 }
 //600, -150 - 400, 600, 675 - 400;# 1
 //600, -150 - 450, 600, 675 - 450 # 0

@@ -3,16 +3,19 @@
 #include <stdlib.h>
 #include <iostream>
 #include "Bird.h"
-#include "Pipe.h"
+#include "Menu.h"
+#include "Score.h"
+//#include "Pipe.h"
 
 //testing git
 using namespace std;
 
 int Pipe::arrayCounter; //static variable for pipes
+int Background::spriteCounter = 1;
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(700, 900), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(700, 900), "Flappy Bird!");
 	string randomString = ""; //string used to make the program "random" but not really =D
 	for (int i = 0607; i < 10620; i+= 1001){
 		srand(i);
@@ -20,42 +23,28 @@ int main()
 		string tempString = to_string(tempRandom);
 		randomString += tempString;
 	}
-	cout << randomString << endl;
-	cout << randomString[0] << endl;
-	cout << randomString[1] << endl;
-	cout << randomString.length() << endl;
-	char test = randomString[0];
-	cout << "test is: " << test << endl;
+	
+	int baseBackgroundType = 1;
 	
 
-	//-----------Background sprites-------
+	//-----------Background sprites-----------------
+	Background* background = new Background(baseBackgroundType);
+	Background* groundSprite = new Background();
+	Background* groundSpriteTwo = new Background();
+	//-----------------------------------------------
 
-	sf::Sprite* backgroundSprite = new sf::Sprite();
-	sf::Texture* backgroundTexture = new sf::Texture();
-	backgroundTexture->loadFromFile("fbirdsprites.png");
-	sf::IntRect* backgroundRect = new sf::IntRect(146, 0, 143, 255);
-	backgroundSprite->setTexture(*backgroundTexture);
-	backgroundSprite->setTextureRect(*backgroundRect);
-	backgroundSprite->scale(5.0f, 3.55f);
-
-	sf::Sprite* groundSprite = new sf::Sprite();
-	sf::IntRect* groundRect = new sf::IntRect(292, 0, 167, 55); 
-	groundSprite->setTexture(*backgroundTexture);
-	groundSprite->setTextureRect(*groundRect);
-	groundSprite->setPosition(0, 775);
-	groundSprite->scale(4.25f, 2.8f);
-
-	sf::Sprite* groundSpriteTwo = new sf::Sprite();
-	groundSpriteTwo->setTexture(*backgroundTexture);
-	groundSpriteTwo->setTextureRect(*groundRect);
-	groundSpriteTwo->setPosition(700, 775);
-	groundSpriteTwo->scale(4.25f, 2.8f);
-	
+	//---------------Menu Sprites--------------------
+	Menu* tutorial = new Menu(1);
+	//-----------------------------------------------
+	//---------------Score stuff---------------------
+	Score* score = new Score();
+	//
 	//---------------game sprites--------------------
 
 	Bird* flappy = new Bird();
-	Pipe* firstPipes = new Pipe(600, -150 - 0, 600, 675 - 0); //difference is about ~825
-	Pipe* secondPipes = new Pipe(1100, -150 - 50, 1100, 675 - 50);
+	Pipe* firstPipes = new Pipe(1100, -150 - 0, 1100, 675 - 0); //difference is about ~825
+	Pipe* secondPipes = new Pipe(1600, -150 - 50, 1600, 675 - 50);
+	
 	//-----------------------------------------------
 	while (window.isOpen())
 	{
@@ -65,32 +54,54 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-				flappy->mClick();
+				if (flappy->isAlive){
+					flappy->hasStarted = true;
+					flappy->mClick();
+				}
+				else{
+					flappy->resetGame(firstPipes, secondPipes);
+				}
 			}
 		}
-		flappy->moveBird();
+		if (flappy->hasStarted){
+			flappy->moveBird(groundSprite, groundSpriteTwo);
+		}
 		if (firstPipes->getArrayCounter() > randomString.length()){
 			firstPipes->resetAC();
 		}
-		firstPipes->movePipes(randomString[firstPipes->getArrayCounter()]);
-		secondPipes->movePipes(randomString[secondPipes->getArrayCounter()]);
-		groundSprite->move(-0.02, 0);
-		groundSpriteTwo->move(-0.02, 0);
-		if (groundSprite->getPosition().x <= -700){
-			groundSprite->setPosition(700, 775);
+		if (flappy->isAlive){
+			if (flappy->hasStarted){
+				flappy->flap();
+				firstPipes->movePipes(randomString[firstPipes->getArrayCounter()]);
+				secondPipes->movePipes(randomString[secondPipes->getArrayCounter()]);
+			}
+			else{
+				flappy->hover();
+			}
+			groundSprite->moveFloor();
+			groundSpriteTwo->moveFloor();
 		}
-		if (groundSpriteTwo->getPosition().x <= -700){
-			groundSpriteTwo->setPosition(700, 775);
+		if (flappy->hasCollided(firstPipes, secondPipes, groundSprite, groundSpriteTwo)){
+			//cout << "collided" << endl;
+			flappy->isAlive = false;
+			//cout << "RIP IN PEPERONI" << endl;
 		}
+		//----------------more background stuff-----
+
+		//------------------------------------------
 		window.clear();
-		window.draw(*backgroundSprite);
-		window.draw(*groundSprite);
-		window.draw(*groundSpriteTwo);
-		window.draw(*(flappy->getSprite()));
+		window.draw(*(background->getSprite()));
+		if (!(flappy->hasStarted)){
+			window.draw(*(tutorial->getSprite()));
+		}
+		window.draw(*(groundSprite->getSprite()));
+		window.draw(*(groundSpriteTwo->getSprite()));
 		firstPipes->drawPipes(&window);
 		secondPipes->drawPipes(&window);
+		window.draw(*(flappy->getSprite()));
+		//score->drawScore(&window);
+		window.draw(*(score->getScore()));
 		window.display();
 	}
-
 	return 0;
 }

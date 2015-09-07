@@ -1,3 +1,5 @@
+#ifndef PIPE_H
+#define PIPE_H
 #include <SFML/Graphics.hpp>
 class Pipe{
 private:
@@ -20,5 +22,5 @@ public:
 	void resetAC();
 	sf::Sprite* getTopSprite();
 	sf::Sprite* getBotSprite();
-	
 };
+#endif

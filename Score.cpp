@@ -18,10 +18,14 @@ Score::Score(){
 	flappyFont->loadFromFile("fbirdfont.TTF");
 	score = new sf::Text();
 	score->setFont(*flappyFont);
-	score->setString("0123456789");
-	score->setCharacterSize(30);
-	score->setPosition(300,300);
+	score->setString("0");
+	score->setCharacterSize(50);
+	score->setPosition(350,100);
 	score->setColor(sf::Color::White);
+}
+
+void Score::setScoreText(string newScore){
+	score->setString(newScore);
 }
 
 void Score::drawScore(sf::RenderWindow* wnd){
@@ -29,6 +33,16 @@ void Score::drawScore(sf::RenderWindow* wnd){
 		wnd->draw(*itor);
 	}
 	*/
+}
+
+void Score::alignToScoreBoard(bool isTop){
+	this->score->scale(.5f, .5f);
+	if (isTop){
+		this->score->setPosition(438, 330);
+	}
+	else{
+		this->score->setPosition(438, 370);
+	}
 }
 
 sf::Text* Score::getScore(){

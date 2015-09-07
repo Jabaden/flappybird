@@ -1,10 +1,12 @@
 #include "Bird.h"
 #include <iostream>
+#include <string>
 using namespace std;
 Bird::Bird(){
 	sprite = new sf::Sprite();
 	texture = new sf::Texture();
 	birdClock = new sf::Clock();
+	scoreClock = new sf::Clock();
 	textureRect = new sf::IntRect(0, 0, 92, 64);
 	texture->loadFromFile("bird.png");
 	sprite->setTexture(*texture);
@@ -96,6 +98,31 @@ bool Bird::hasCollided(Pipe* pipeOne, Pipe* pipeTwo, Background* floorOne, Backg
 	}
 }
 
+void Bird::toggleCanScore(){
+	if (canScore){
+		canScore = false;
+	}
+	else{
+		canScore = true;
+	}
+}
+
+void Bird::checkIfScored(Pipe* pipeOne, Pipe* pipeTwo){
+	int timeToPipeOffScreen = 2;
+	if (this->canScore == false && this->scoreClock->getElapsedTime().asSeconds() > 2.2){
+		this->canScore = true;
+
+	}
+
+	if ((this->sprite->getPosition().x > (pipeOne->getTopSprite()->getPosition().x + pipeOne->getTopSprite()->getGlobalBounds().width) ||
+		(this->sprite->getPosition().x > (pipeTwo->getTopSprite()->getPosition().x + pipeTwo->getTopSprite()->getGlobalBounds().width))) &&
+		canScore){
+		this->score++;
+		this->canScore = false;
+		this->scoreClock->restart();
+	}
+}
+
 void Bird::resetGame(Pipe* pipeOne, Pipe* pipeTwo){
 	//int topX, int topY, int botX, int botY
 	/*Pipe* firstPipes = new Pipe(1100, -150 - 0, 1100, 675 - 0); //difference is about ~825
@@ -114,10 +141,26 @@ void Bird::resetGame(Pipe* pipeOne, Pipe* pipeTwo){
 
 	this->hasStarted = false;
 	this->isAlive = true;
-
-	
-
-
-
-
+	this->canScore = true;
+	this->score = 0;
 }
+
+int Bird::getScore(){
+	return this->score;
+}
+
+int Bird::getTopScore(){
+	return topScore;
+}
+
+void Bird::updateHighScore(){
+	if (this->score > this->topScore){
+		topScore = score;
+	}
+}
+
+//string Bird::getScoreAsString(){
+	//string tempString = "";
+	//tempString = to_string(this->score);
+	//return tempString;
+//}

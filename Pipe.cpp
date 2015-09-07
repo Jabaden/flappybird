@@ -43,6 +43,7 @@ void Pipe::movePipes(char sNumber){
 	topSprite->move(-0.02, 0);
 	botSprite->move(-0.02, 0);
 	if (this->botSprite->getPosition().x <= -(this->botSprite->getGlobalBounds().width)){
+		//cout << " this is happening" << endl;
 		this->botSprite->setPosition(GAMEWIDTH + buffer, this->botSprite->getPosition().y);
 		this->topSprite->setPosition(GAMEWIDTH + buffer, this->topSprite->getPosition().y);
 		this->setPipePosition(sNumber);
@@ -100,7 +101,6 @@ void Pipe::setPipePosition(char sNumber){
 	}
 	this->incrementAC();
 	cout << "array counter is" <<  arrayCounter << endl;
-
 }
 //600, -150 - 400, 600, 675 - 400;# 1
 //600, -150 - 450, 600, 675 - 450 # 0

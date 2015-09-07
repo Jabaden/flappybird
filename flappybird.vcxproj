@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Bird.cpp" />
+    <ClCompile Include="Gameover.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Pipe.cpp" />
@@ -94,6 +95,7 @@
   <ItemGroup>
     <ClInclude Include="Background.h" />
     <ClInclude Include="Bird.h" />
+    <ClInclude Include="Gameover.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Score.h" />
